@@ -1,6 +1,7 @@
 const video = document.querySelector('.videoplayer');
 const canvas = document.querySelector('.photocanvas');
 const ctx = canvas.getContext('2d');
+const captureButton = document.querySelector('.capture');
 const strip = document.querySelector('.photostrip');
 
 function getVideo() {
@@ -11,17 +12,24 @@ function getVideo() {
       // Convert MediaStream into a playable video url
       video.src = window.URL.createObjectURL(localMediaStream);
       video.play();
+      
+      // Turns off camera when navigating to a different tab.
+      // Not sure how to turn it back on tough, possibly with a button?
+      document.addEventListener("webkitvisibilitychange", () => {
+        handleVisibilityChange(localMediaStream);
+      })
     })
     .catch(err => {
       console.error(`Something went wrong!`, err);
     });
+    
+    
 }
 
 function paintToCanvas() {
   // Canvas has to be same width and height as video
   const width = video.videoWidth;
   const height = video.videoHeight;
-  console.log(width, height);
   canvas.width = width;
   canvas.height = height;
 
@@ -63,8 +71,17 @@ function rgbSplit(pixels) {
   return pixels;
 }
 
+function handleVisibilityChange(stream) {
+  if (document["hidden"]) {
+    stream.getTracks()[0].stop()
+    console.log("Camera stopped because of inactivity");
+  }
+}
+
 getVideo();
 
 // Listen for 'canplay' event on video, then paintToCanvas
 // A playing video emits the 'canplay' event
 video.addEventListener('canplay', paintToCanvas);
+captureButton.addEventListener('click', takePhoto);
+
