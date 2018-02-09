@@ -12,7 +12,7 @@ function getVideo() {
       // Convert MediaStream into a playable video url
       video.src = window.URL.createObjectURL(localMediaStream);
       video.play();
-      
+
       // Turns off camera when navigating to a different tab.
       // Not sure how to turn it back on tough, possibly with a button?
       document.addEventListener("webkitvisibilitychange", () => {
@@ -22,8 +22,6 @@ function getVideo() {
     .catch(err => {
       console.error(`Something went wrong!`, err);
     });
-    
-    
 }
 
 function paintToCanvas() {
@@ -42,12 +40,14 @@ function paintToCanvas() {
     let pixels = ctx.getImageData(0, 0, width, height);
     // Modify pixels
     // pixels = redEffect(pixels);
+    // pixels = invert(pixels);
+    // pixels = grayscale(pixels);
     pixels = rgbSplit(pixels);
     // Ghost effect! Stacking a transparent version of the current image on top
     ctx.globalAlpha = 0.1;
     // Put pixels back
     ctx.putImageData(pixels, 0, 0)
-    
+
   }, 16);
 }
 
@@ -71,6 +71,36 @@ function rgbSplit(pixels) {
   return pixels;
 }
 
+function redEffect(pixels) {
+  for(let i = 0; i < pixels.data.length; i+=4) {
+    // pixels.data[i] = 0; // red
+    pixels.data[i + 1] = 0; // green
+    pixels.data[i + 2] = 0; // blue
+  }
+  return pixels
+}
+
+// The invert function subtracts each color from the max value 255
+function invert(pixels) {
+  for(let i = 0; i < pixels.data.length; i+=4) {
+    pixels.data[i] = 255 - pixels.data[i]; // red
+    pixels.data[i + 1] = 255 - pixels.data[i + 1]; // green
+    pixels.data[i + 2] = 255 - pixels.data[i + 2]; // blue
+  }
+  return pixels
+}
+
+// The grayscale function uses the average of red, green and blue
+function grayscale(pixels) {
+  for(let i = 0; i < pixels.data.length; i+=4) {
+    let avg = (pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2]) / 3;
+    pixels.data[i + 0] = avg; // red
+    pixels.data[i + 1] = avg; // green
+    pixels.data[i + 2] = avg; // blue
+  }
+  return pixels
+}
+
 function handleVisibilityChange(stream) {
   if (document["hidden"]) {
     stream.getTracks()[0].stop()
@@ -84,4 +114,3 @@ getVideo();
 // A playing video emits the 'canplay' event
 video.addEventListener('canplay', paintToCanvas);
 captureButton.addEventListener('click', takePhoto);
-
