@@ -1,7 +1,7 @@
 const video = document.querySelector('.videoplayer');
 const canvas = document.querySelector('.photocanvas');
 const ctx = canvas.getContext('2d');
-const captureButton = document.querySelector('.capture');
+const captureButton = document.querySelector('.capture-button');
 const strip = document.querySelector('.photostrip');
 
 function getVideo() {
