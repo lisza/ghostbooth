@@ -22,7 +22,16 @@ html {
   margin: 1.5rem 0.5rem;
 }
 
-.capture-button {
+/* .capture-button {
+  border: 1px solid;
+  color: grey;
+  cursor: pointer;
+  /* font-size: 1em; */
+  /* padding: 10px; */
+  /* text-transform: uppercase; */
+/* }  */
+
+button {
   border: 1px solid;
   color: grey;
   cursor: pointer;
@@ -31,8 +40,13 @@ html {
   text-transform: uppercase;
 }
 
-.capture:hover {
+button:hover {
   color: black;
+}
+
+p {
+  font: 400 smaller system-ui;
+  color: grey;
 }
 
 .photostrip {

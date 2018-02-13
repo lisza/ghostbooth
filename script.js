@@ -58,7 +58,7 @@ function takePhoto() {
   const link = document.createElement('a');
   link.href = data;
   link.setAttribute('download', 'my_ghostly_photo');
-  link.innerHTML = `<img src="${data}" alt="webcam snapshot"/>`;
+  link.innerHTML = `<img src="${data}" alt="webcam snapshot" title="Click to download"/>`;
   strip.insertBefore(link, strip.firstChild);
 }
 
