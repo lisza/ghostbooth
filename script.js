@@ -10,14 +10,21 @@ function getVideo() {
     .then(localMediaStream => {
       console.log(localMediaStream);
       // Convert MediaStream into a playable video url
-      video.src = window.URL.createObjectURL(localMediaStream);
+      // Older browsers may not have srcObject
+      if ("srcObject" in video) {
+        video.srcObject = localMediaStream;
+      } else {
+        // Fallback for older browsers
+        video.src = window.URL.createObjectURL(localMediaStream);
+      }
+
       video.play();
 
       // Turns off camera when navigating to a different tab.
       // Not sure how to turn it back on tough, possibly with a button?
-      document.addEventListener("webkitvisibilitychange", () => {
-        handleVisibilityChange(localMediaStream);
-      })
+      // document.addEventListener("webkitvisibilitychange", () => {
+      //   handleVisibilityChange(localMediaStream);
+      // })
     })
     .catch(err => {
       console.error(`Something went wrong!`, err);
